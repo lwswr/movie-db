@@ -1,10 +1,10 @@
-import React from "react";
-import axios from "axios";
+import React, { useReducer } from "react";
 import styled from "styled-components";
-import { useState } from "react";
 import { useEffect } from "react";
 import { SearchForm } from "./SearchForm";
 import { MovieList } from "./MovieList";
+//import { PopUp } from "./PopUp";
+import { getMovies, getSelected } from "./API";
 
 const MainContainer = styled.html`
   display: flex;
@@ -43,49 +43,124 @@ export type Movie = {
   Poster: string;
 };
 
+export type AppState = {
+  search: string;
+  result: MovieResponse | undefined;
+  page: number;
+  selectedResult: Movie | undefined;
+};
+
+const initialState: AppState = {
+  search: "Lord of the Rings",
+  result: undefined,
+  page: 1,
+  selectedResult: undefined,
+};
+
+export type AppEvents =
+  | {
+      type: "search set";
+      payload: { search: string };
+    }
+  | {
+      type: "movie response set";
+      movieResPayload: MovieResponse;
+    }
+  | {
+      type: "page number changed";
+      pagePayload: { page: number };
+    }
+  | {
+      type: "select movie response set";
+      selMovieResPayload: Movie;
+    };
+
+export const reducer: React.Reducer<AppState, AppEvents> = (state, event) => {
+  switch (event?.type) {
+    case "search set": {
+      return {
+        ...state,
+        search: event.payload.search,
+      };
+    }
+    case "movie response set": {
+      return { ...state, result: event.movieResPayload };
+    }
+    case "page number changed": {
+      return {
+        ...state,
+        page: event.pagePayload.page,
+      };
+    }
+    case "select movie response set": {
+      return {
+        ...state,
+        selectedResult: event.selMovieResPayload,
+      };
+    }
+  }
+};
+
 function App() {
-  const [search, setSearch] = useState("the lord of the rings");
-  const [result, setResult] = useState<MovieResponse | undefined>(undefined);
-  const [page, changePage] = useState<number>(1);
+  const [state, update] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    const getMovies = (movieTitle: string) => {
-      axios
-        .get<MovieResponse>(
-          `http://www.omdbapi.com/?apikey=13d6c617&s=${movieTitle}&page=${page}&type=movie`
-        )
-        .then((res) => setResult(res.data))
-        .catch((err) => console.log("error", err));
-    };
-    if (search !== null) {
-      getMovies(search);
+    async function callToAPIs() {
+      try {
+        const [movieResponse, selMovieResponse] = await Promise.all([
+          getMovies(state.search, state.page),
+          getSelected(state.search),
+        ]);
+        update({ type: "movie response set", movieResPayload: movieResponse });
+        update({
+          type: "select movie response set",
+          selMovieResPayload: selMovieResponse,
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
-  }, [search, page]);
+    if (state.search !== null) {
+      callToAPIs();
+    }
+  }, [state.search, state.page]);
 
-  if (!result) return null;
+  if (!state.result) return null;
   return (
     <MainContainer>
       <Title>Movie Database</Title>
       <SearchForm
-        submit={({ movieTitle }) => {
-          setSearch(movieTitle);
-          changePage(1);
+        submit={({ search }) => {
+          update({ type: "search set", payload: { search } });
+          update({ type: "page number changed", pagePayload: { page: 1 } });
         }}
       />
       <div>
-        {result.totalResults} results for "{search}"
+        {state.result.totalResults} results for "{state.search}"
       </div>
-      <MovieList movies={result.Search} />
+      <MovieList movies={state.result.Search} />
       <NavButtons>
         <button
           onClick={() => {
-            if (page !== 1) changePage(page - 1);
+            update({
+              type: "page number changed",
+              pagePayload: { page: state.page - 1 },
+            });
           }}
         >
           Prev
         </button>
-        <button onClick={() => changePage(page + 1)}>Next</button>
-        page {page}
+        <button
+          onClick={() => {
+            update({
+              type: "page number changed",
+              pagePayload: { page: state.page + 1 },
+            });
+          }}
+        >
+          Next
+        </button>
+        page {state.page}
       </NavButtons>
     </MainContainer>
   );

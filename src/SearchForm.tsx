@@ -33,13 +33,13 @@ const SubmitButton = styled.button`
 `;
 
 type SearchProps = {
-  movieTitle: string;
+  search: string;
 };
 
 export const SearchForm = ({
   submit,
 }: {
-  submit: (movieTitle: SearchProps) => void;
+  submit: (search: SearchProps) => void;
 }) => {
   const [newSearch, setNewSearch] = useState("");
 
@@ -49,7 +49,7 @@ export const SearchForm = ({
       onSubmit={(event) => {
         event.preventDefault();
         if (newSearch !== null) {
-          submit({ movieTitle: newSearch });
+          submit({ search: newSearch });
           setNewSearch("");
         }
       }}

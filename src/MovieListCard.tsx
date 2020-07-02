@@ -22,7 +22,7 @@ const MovieTitle = styled.div`
 
 export const MovieListCard = ({ movie }: { movie: Movie }) => {
   return (
-    <MovieListTile>
+    <MovieListTile onClick={() => console.log(movie.imdbID)}>
       <Poster src={movie.Poster} alt="#" />
       <MovieTitle>{movie.Title}</MovieTitle>
     </MovieListTile>
