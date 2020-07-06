@@ -3,10 +3,10 @@ import styled from "styled-components";
 import { useEffect } from "react";
 import { SearchForm } from "./SearchForm";
 import { MovieList } from "./MovieList";
-//import { PopUp } from "./PopUp";
+import { PopUp } from "./PopUp";
 import { getMovies, getSelected } from "./API";
 
-const MainContainer = styled.html`
+const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,6 +14,7 @@ const MainContainer = styled.html`
   background: rgb(66, 76, 84);
   height: 100%;
   width: auto;
+  padding: none;
 `;
 
 const Title = styled.div`
@@ -21,6 +22,11 @@ const Title = styled.div`
   text-align: center;
   font-size: 50px;
   padding: 20px;
+`;
+
+const ResultsFound = styled.div`
+  color: white;
+  text-align: center;
 `;
 
 const NavButtons = styled.div`
@@ -43,18 +49,28 @@ export type Movie = {
   Poster: string;
 };
 
+export type DetailedMovie = {
+  Title: string;
+  Plot: string;
+  Released: string;
+  Runtime: string;
+  imdbID: string;
+  imdbRating: string;
+  Poster: string;
+};
+
 export type AppState = {
   search: string;
   result: MovieResponse | undefined;
   page: number;
-  selectedResult: Movie | undefined;
+  selectedMovie: DetailedMovie | undefined;
 };
 
 const initialState: AppState = {
   search: "Lord of the Rings",
   result: undefined,
   page: 1,
-  selectedResult: undefined,
+  selectedMovie: undefined,
 };
 
 export type AppEvents =
@@ -72,7 +88,7 @@ export type AppEvents =
     }
   | {
       type: "select movie response set";
-      selMovieResPayload: Movie;
+      selMovieResPayload: DetailedMovie;
     };
 
 export const reducer: React.Reducer<AppState, AppEvents> = (state, event) => {
@@ -95,7 +111,7 @@ export const reducer: React.Reducer<AppState, AppEvents> = (state, event) => {
     case "select movie response set": {
       return {
         ...state,
-        selectedResult: event.selMovieResPayload,
+        selectedMovie: event.selMovieResPayload,
       };
     }
   }
@@ -103,19 +119,22 @@ export const reducer: React.Reducer<AppState, AppEvents> = (state, event) => {
 
 function App() {
   const [state, update] = useReducer(reducer, initialState);
+  const [selectedID, updateSelectedID] = React.useState("");
+  const [popUpState, updatePopUpState] = React.useState(false);
 
   useEffect(() => {
     async function callToAPIs() {
       try {
         const [movieResponse, selMovieResponse] = await Promise.all([
           getMovies(state.search, state.page),
-          getSelected(state.search),
+          getSelected(selectedID),
         ]);
         update({ type: "movie response set", movieResPayload: movieResponse });
         update({
           type: "select movie response set",
           selMovieResPayload: selMovieResponse,
         });
+        console.log(selMovieResponse);
       } catch (error) {
         console.log(error);
       }
@@ -123,45 +142,65 @@ function App() {
     if (state.search !== null) {
       callToAPIs();
     }
-  }, [state.search, state.page]);
+  }, [state.search, state.page, selectedID]);
 
   if (!state.result) return null;
+
   return (
     <MainContainer>
       <Title>Movie Database</Title>
-      <SearchForm
-        submit={({ search }) => {
-          update({ type: "search set", payload: { search } });
-          update({ type: "page number changed", pagePayload: { page: 1 } });
-        }}
-      />
-      <div>
-        {state.result.totalResults} results for "{state.search}"
-      </div>
-      <MovieList movies={state.result.Search} />
-      <NavButtons>
-        <button
-          onClick={() => {
-            update({
-              type: "page number changed",
-              pagePayload: { page: state.page - 1 },
-            });
-          }}
-        >
-          Prev
-        </button>
-        <button
-          onClick={() => {
-            update({
-              type: "page number changed",
-              pagePayload: { page: state.page + 1 },
-            });
-          }}
-        >
-          Next
-        </button>
-        page {state.page}
-      </NavButtons>
+      {popUpState ? (
+        <div>
+          <PopUp
+            selected={state.selectedMovie}
+            backClick={(popUp) => updatePopUpState(popUp)}
+          />
+        </div>
+      ) : (
+        <div>
+          <SearchForm
+            submit={({ search }) => {
+              update({ type: "search set", payload: { search } });
+              update({ type: "page number changed", pagePayload: { page: 1 } });
+            }}
+          />
+          <ResultsFound>
+            {state.result.totalResults} results for "{state.search}"
+          </ResultsFound>
+          <MovieList
+            movies={state.result.Search}
+            sendSelectedID={(id) => {
+              updateSelectedID(id);
+              updatePopUpState(true);
+            }}
+          />
+          <NavButtons>
+            <button
+              onClick={() => {
+                if (state.page! <= 0) {
+                  update({
+                    type: "page number changed",
+                    pagePayload: { page: state.page - 1 },
+                  });
+                }
+              }}
+            >
+              Prev
+            </button>
+            <button
+              onClick={() => {
+                update({
+                  type: "page number changed",
+                  pagePayload: { page: state.page + 1 },
+                });
+              }}
+            >
+              Next
+            </button>
+            page {state.page}
+          </NavButtons>
+        </div>
+      )}
     </MainContainer>
   );
 }

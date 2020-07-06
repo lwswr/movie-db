@@ -20,9 +20,15 @@ const MovieTitle = styled.div`
   font-size: 12px;
 `;
 
-export const MovieListCard = ({ movie }: { movie: Movie }) => {
+export const MovieListCard = ({
+  movie,
+  onClick,
+}: {
+  movie: Movie;
+  onClick: (id: string) => void;
+}) => {
   return (
-    <MovieListTile onClick={() => console.log(movie.imdbID)}>
+    <MovieListTile onClick={() => onClick(movie.imdbID)}>
       <Poster src={movie.Poster} alt="#" />
       <MovieTitle>{movie.Title}</MovieTitle>
     </MovieListTile>

@@ -9,11 +9,23 @@ const MoviesList = styled.div`
   justify-content: center;
 `;
 
-export const MovieList = ({ movies }: { movies: Movie[] }) => {
+export const MovieList = ({
+  movies,
+  sendSelectedID,
+}: {
+  movies: Movie[];
+  sendSelectedID: (id: string) => void;
+}) => {
   return (
     <MoviesList>
       {movies.map((item) => {
-        return <MovieListCard key={item.imdbID} movie={item} />;
+        return (
+          <MovieListCard
+            key={item.imdbID}
+            movie={item}
+            onClick={(id: string) => sendSelectedID(id)}
+          />
+        );
       })}
     </MoviesList>
   );

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { MovieResponse, Movie } from "./App";
+import { MovieResponse, DetailedMovie } from "./App";
 
 export const getMovies = (search: string, page: number) => {
   return axios
@@ -13,7 +13,7 @@ export const getMovies = (search: string, page: number) => {
 
 export const getSelected = (id: string | undefined) => {
   return axios
-    .get<Movie>(`http://www.omdbapi.com/?apikey=13d6c617&s=^id=${id}type=movie`)
+    .get<DetailedMovie>(`http://www.omdbapi.com/?apikey=13d6c617&i=${id}`)
     .then((response) => {
       return response.data;
     });
