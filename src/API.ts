@@ -1,10 +1,10 @@
 import axios from "axios";
 import { MovieResponse, DetailedMovie } from "./App";
 
-export const getMovies = (search: string, page: number) => {
+export const getMovies = (search: string, page: number, type: string) => {
   return axios
     .get<MovieResponse>(
-      `http://www.omdbapi.com/?apikey=13d6c617&s=${search}&page=${page}&type=movie`
+      `http://www.omdbapi.com/?apikey=13d6c617&s=${search}&page=${page}&type=${type}`
     )
     .then((response) => {
       return response.data;

@@ -14,7 +14,31 @@ const InputField = styled.input`
   font-size: 25px;
   padding: 10px 20px;
   margin: 5px 10px;
-  border-radius: 10px;
+  background: none;
+  border-bottom: 2px solid white;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  color: white;
+  :focus {
+    outline-width: 0;
+  }
+`;
+
+const SelectField = styled.select`
+  width: 150px;
+  font-size: 25px;
+  padding: 10px 20px;
+  margin: 5px 10px;
+  background: none;
+  border-bottom: 2px solid white;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  color: white;
+  :focus {
+    outline-width: 0;
+  }
 `;
 
 const SubmitButton = styled.button`
@@ -34,22 +58,24 @@ const SubmitButton = styled.button`
 
 type SearchProps = {
   search: string;
+  mediaType: string;
 };
 
 export const SearchForm = ({
   submit,
 }: {
-  submit: (search: SearchProps) => void;
+  submit: (fullSearch: SearchProps) => void;
 }) => {
   const [newSearch, setNewSearch] = useState("");
+  const [newMediaType, setNewMediaType] = useState("movie");
 
   return (
     <SearchFormCon
       action="submit"
-      onSubmit={(event) => {
-        event.preventDefault();
+      onSubmit={(e) => {
+        e.preventDefault();
         if (newSearch !== null) {
-          submit({ search: newSearch });
+          submit({ search: newSearch, mediaType: newMediaType });
           setNewSearch("");
         }
       }}
@@ -57,8 +83,12 @@ export const SearchForm = ({
       <InputField
         type="text"
         value={newSearch}
-        onChange={(event) => setNewSearch(event.target.value)}
+        onChange={(e) => setNewSearch(e.target.value)}
       />
+      <SelectField onChange={(e) => setNewMediaType(e.target.value)}>
+        <option value="film">Film</option>
+        <option value="series">Series</option>
+      </SelectField>
       <SubmitButton type="submit">Search</SubmitButton>
     </SearchFormCon>
   );

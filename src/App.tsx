@@ -5,6 +5,7 @@ import { SearchForm } from "./SearchForm";
 import { MovieList } from "./MovieList";
 import { PopUp } from "./PopUp";
 import { getMovies, getSelected } from "./API";
+// import { PageButtons } from "./PageButtons";
 
 const MainContainer = styled.div`
   display: flex;
@@ -33,6 +34,21 @@ const NavButtons = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
+`;
+
+const NavButton = styled.button`
+  font-size: 25px;
+  padding: 10px 20px;
+  margin: 5px 10px;
+  border: 2px solid white;
+  border-radius: 10px;
+  background: none;
+  color: white;
+  transition: 0.2s;
+  :hover {
+    background: white;
+    color: rgb(66, 76, 84);
+  }
 `;
 
 export type MovieResponse = {
@@ -88,7 +104,7 @@ export type AppEvents =
     }
   | {
       type: "select movie response set";
-      selMovieResPayload: DetailedMovie;
+      selMovieResPayload: DetailedMovie | undefined;
     };
 
 export const reducer: React.Reducer<AppState, AppEvents> = (state, event) => {
@@ -121,12 +137,13 @@ function App() {
   const [state, update] = useReducer(reducer, initialState);
   const [selectedID, updateSelectedID] = React.useState("");
   const [popUpState, updatePopUpState] = React.useState(false);
+  const [mediaType, setMediaType] = React.useState("movie");
 
   useEffect(() => {
     async function callToAPIs() {
       try {
         const [movieResponse, selMovieResponse] = await Promise.all([
-          getMovies(state.search, state.page),
+          getMovies(state.search, state.page, mediaType),
           getSelected(selectedID),
         ]);
         update({ type: "movie response set", movieResPayload: movieResponse });
@@ -142,7 +159,7 @@ function App() {
     if (state.search !== null) {
       callToAPIs();
     }
-  }, [state.search, state.page, selectedID]);
+  }, [state.search, state.page, selectedID, mediaType]);
 
   if (!state.result) return null;
 
@@ -150,18 +167,19 @@ function App() {
     <MainContainer>
       <Title>Movie Database</Title>
       {popUpState ? (
-        <div>
-          <PopUp
-            selected={state.selectedMovie}
-            backClick={(popUp) => updatePopUpState(popUp)}
-          />
-        </div>
+        <PopUp
+          selected={state.selectedMovie}
+          backClick={(click) => {
+            updatePopUpState(click);
+          }}
+        />
       ) : (
         <div>
           <SearchForm
-            submit={({ search }) => {
+            submit={({ search, mediaType }) => {
               update({ type: "search set", payload: { search } });
               update({ type: "page number changed", pagePayload: { page: 1 } });
+              setMediaType(mediaType);
             }}
           />
           <ResultsFound>
@@ -175,9 +193,9 @@ function App() {
             }}
           />
           <NavButtons>
-            <button
+            <NavButton
               onClick={() => {
-                if (state.page! <= 0) {
+                if (state.page >= 1) {
                   update({
                     type: "page number changed",
                     pagePayload: { page: state.page - 1 },
@@ -186,8 +204,8 @@ function App() {
               }}
             >
               Prev
-            </button>
-            <button
+            </NavButton>
+            <NavButton
               onClick={() => {
                 update({
                   type: "page number changed",
@@ -196,8 +214,8 @@ function App() {
               }}
             >
               Next
-            </button>
-            page {state.page}
+            </NavButton>
+            <p> page {state.page}</p>
           </NavButtons>
         </div>
       )}
