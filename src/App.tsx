@@ -15,7 +15,8 @@ const MainContainer = styled.div`
   background: rgb(66, 76, 84);
   height: 100%;
   width: auto;
-  padding: none;
+  padding: 0;
+  margin: 0;
 `;
 
 const Title = styled.div`

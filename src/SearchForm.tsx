@@ -82,6 +82,7 @@ export const SearchForm = ({
     >
       <InputField
         type="text"
+        placeholder="search..."
         value={newSearch}
         onChange={(e) => setNewSearch(e.target.value)}
       />
