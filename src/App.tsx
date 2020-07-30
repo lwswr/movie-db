@@ -7,16 +7,15 @@ import { PopUp } from "./PopUp";
 import { getMovies, getSelected } from "./API";
 // import { PageButtons } from "./PageButtons";
 
-const MainContainer = styled.div`
+const MainContainer = styled.body`
   display: flex;
   flex-direction: column;
   align-items: center;
   font-family: "Verdana";
-  background: rgb(66, 76, 84);
+  background: rgb(34, 41, 46);
   height: 100%;
   width: auto;
-  padding: 0;
-  margin: 0;
+  margin: 0px;
 `;
 
 const Title = styled.div`
@@ -183,6 +182,7 @@ function App() {
               setMediaType(mediaType);
             }}
           />
+
           <ResultsFound>
             {state.result.totalResults} results for "{state.search}"
           </ResultsFound>
@@ -193,19 +193,21 @@ function App() {
               updatePopUpState(true);
             }}
           />
+
           <NavButtons>
-            <NavButton
-              onClick={() => {
-                if (state.page >= 1) {
+            {state.page === 1 ? null : (
+              <NavButton
+                onClick={() => {
                   update({
                     type: "page number changed",
                     pagePayload: { page: state.page - 1 },
                   });
-                }
-              }}
-            >
-              Prev
-            </NavButton>
+                }}
+              >
+                Prev
+              </NavButton>
+            )}
+
             <NavButton
               onClick={() => {
                 update({

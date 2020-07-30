@@ -12,8 +12,14 @@ const MovieListTile = styled.li`
 `;
 
 const Poster = styled.img`
+  opacity: 1;
   height: 300px;
   width: 200px;
+  transition: 0.5s ease;
+  backface-visibility: hidden;
+  :hover {
+    opacity: 0.7;
+  }
 `;
 
 const MovieTitle = styled.div`
