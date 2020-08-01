@@ -1,15 +1,16 @@
 import * as React from "react";
 import styled from "styled-components";
 import { DetailedMovie } from "./App";
+import "./index.css";
 
 const PopUpContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: "Verdana";
+  font-family: "Montserrat", sans-serif;
   background: rgb(34, 41, 46);
   height: 100vh;
-  width: 60%;
+  width: 70%;
 `;
 
 const PopUpWindow = styled.div`
@@ -20,11 +21,11 @@ const PopUpWindow = styled.div`
   color: rgb(66, 76, 84);
   padding: 20px;
   border-radius: 25px;
-  width: 75%;
 `;
 
 const PopUpBackButton = styled.button`
   font-size: 25px;
+  font-family: "Montserrat", sans-serif;
   padding: 10px 20px;
   margin: 5px 10px;
   border: 2px solid white;
@@ -39,6 +40,7 @@ const PopUpBackButton = styled.button`
 `;
 
 const PopUpTitle = styled.div`
+  text-align: center;
   padding: 10px;
   color: rgb(66, 76, 84);
   font-size: 35px;
@@ -62,6 +64,19 @@ const PopUpPoster = styled.img`
   width: 300;
 `;
 
+const PopUpAwards = styled.div`
+  padding: 10px;
+  color: rgb(66, 76, 84);
+  font-size: 12px;
+  font-style: italic;
+`;
+
+const PopUpIMDBRating = styled.div`
+  padding: 10px;
+  color: rgb(66, 76, 84);
+  font-size: 16px;
+`;
+
 export const PopUp = ({
   selected,
   backClick,
@@ -75,7 +90,11 @@ export const PopUp = ({
       <PopUpWindow>
         <PopUpTitle>{selected.Title}</PopUpTitle>
         <PopUpYear>{selected.Released}</PopUpYear>
-        <PopUpPlot>{selected.Plot}</PopUpPlot>
+        <PopUpIMDBRating>IMDB - {selected.imdbRating}/10</PopUpIMDBRating>
+        <PopUpPlot>
+          {selected.Plot}
+          <PopUpAwards>{selected.Awards}</PopUpAwards>
+        </PopUpPlot>
         <PopUpPoster src={selected.Poster} alt=""></PopUpPoster>
       </PopUpWindow>
       <PopUpBackButton onClick={() => backClick(false)}>Back</PopUpBackButton>

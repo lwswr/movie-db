@@ -5,13 +5,13 @@ import { SearchForm } from "./SearchForm";
 import { MovieList } from "./MovieList";
 import { PopUp } from "./PopUp";
 import { getMovies, getSelected } from "./API";
+import "./index.css";
 // import { PageButtons } from "./PageButtons";
 
-const MainContainer = styled.body`
+const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: "Verdana";
   background: rgb(34, 41, 46);
   height: 100%;
   width: 100%;
@@ -27,7 +27,8 @@ const Title = styled.div`
 
 const ResultsFound = styled.div`
   color: white;
-  text-align: center;
+  text-align: left;
+  padding-left: 100px;
 `;
 
 const NavButtons = styled.div`
@@ -38,6 +39,7 @@ const NavButtons = styled.div`
 
 const NavButton = styled.button`
   font-size: 25px;
+  font-family: "Montserrat", sans-serif;
   padding: 10px 20px;
   margin: 5px 10px;
   border: 2px solid white;
@@ -74,6 +76,7 @@ export type DetailedMovie = {
   Plot: string;
   Released: string;
   Runtime: string;
+  Awards: string;
   imdbID: string;
   imdbRating: string;
   Poster: string;
@@ -85,11 +88,13 @@ export type AppState = {
   page: number;
   selectedMovie: DetailedMovie | undefined;
 };
+
 const initialDetailedState: DetailedMovie = {
   Title: "",
   Plot: "",
   Released: "",
   Runtime: "",
+  Awards: "",
   imdbID: "",
   imdbRating: "",
   Poster: "",
@@ -188,6 +193,7 @@ function App() {
               type: "select movie response set",
               selMovieResPayload: initialDetailedState,
             });
+            updateSelectedID("");
           }}
         />
       ) : (

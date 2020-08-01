@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import styled from "styled-components";
+import "./index.css";
 
 const SearchFormCon = styled.form`
   display: flex;
@@ -36,6 +37,7 @@ const SelectField = styled.select`
   border-right: none;
   border-top: none;
   color: white;
+  font-family: "Montserrat", sans-serif;
   :focus {
     outline-width: 0;
   }
@@ -43,6 +45,7 @@ const SelectField = styled.select`
 
 const SubmitButton = styled.button`
   font-size: 25px;
+  font-family: "Montserrat", sans-serif;
   padding: 10px 20px;
   margin: 5px 10px;
   border: 2px solid white;
@@ -74,7 +77,7 @@ export const SearchForm = ({
       action="submit"
       onSubmit={(e) => {
         e.preventDefault();
-        if (newSearch !== null) {
+        if (newSearch !== "") {
           submit({ search: newSearch, mediaType: newMediaType });
           setNewSearch("");
         }
