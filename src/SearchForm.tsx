@@ -21,6 +21,7 @@ const InputField = styled.input`
   border-right: none;
   border-top: none;
   color: white;
+  font-family: "Montserrat", sans-serif;
   :focus {
     outline-width: 0;
   }
