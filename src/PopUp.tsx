@@ -8,8 +8,8 @@ const PopUpContainer = styled.div`
   align-items: center;
   font-family: "Verdana";
   background: rgb(34, 41, 46);
-  height: 100%;
-  width: 50%;
+  height: 100vh;
+  width: 60%;
 `;
 
 const PopUpWindow = styled.div`
@@ -20,7 +20,7 @@ const PopUpWindow = styled.div`
   color: rgb(66, 76, 84);
   padding: 20px;
   border-radius: 25px;
-  width: 60%;
+  width: 75%;
 `;
 
 const PopUpBackButton = styled.button`
