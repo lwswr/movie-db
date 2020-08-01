@@ -7,9 +7,9 @@ const PopUpContainer = styled.div`
   flex-direction: column;
   align-items: center;
   font-family: "Verdana";
-  background: rgb(66, 76, 84);
+  background: rgb(34, 41, 46);
   height: 100%;
-  width: auto;
+  width: 50%;
 `;
 
 const PopUpWindow = styled.div`

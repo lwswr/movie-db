@@ -7,6 +7,7 @@ const MoviesList = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  background: rgb(34, 41, 46);
 `;
 
 export const MovieList = ({

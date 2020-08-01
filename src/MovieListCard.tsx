@@ -5,6 +5,8 @@ import styled from "styled-components";
 const MovieListTile = styled.li`
   list-style: none;
   flex: 0 0 18%;
+  height: 325px;
+  width: 225px;
   margin: 20px 20px;
   padding: 20px 20px;
   background: white;

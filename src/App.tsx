@@ -14,7 +14,7 @@ const MainContainer = styled.body`
   font-family: "Verdana";
   background: rgb(34, 41, 46);
   height: 100%;
-  width: auto;
+  width: 100%;
   margin: 0px;
 `;
 
@@ -51,6 +51,10 @@ const NavButton = styled.button`
   }
 `;
 
+const PageNumber = styled.div`
+  color: white;
+`;
+
 export type MovieResponse = {
   Search: Movie[];
   Response: string;
@@ -80,6 +84,15 @@ export type AppState = {
   result: MovieResponse | undefined;
   page: number;
   selectedMovie: DetailedMovie | undefined;
+};
+const initialDetailedState: DetailedMovie = {
+  Title: "",
+  Plot: "",
+  Released: "",
+  Runtime: "",
+  imdbID: "",
+  imdbRating: "",
+  Poster: "",
 };
 
 const initialState: AppState = {
@@ -171,6 +184,10 @@ function App() {
           selected={state.selectedMovie}
           backClick={(click) => {
             updatePopUpState(click);
+            update({
+              type: "select movie response set",
+              selMovieResPayload: initialDetailedState,
+            });
           }}
         />
       ) : (
@@ -218,7 +235,7 @@ function App() {
             >
               Next
             </NavButton>
-            <p> page {state.page}</p>
+            <PageNumber> page {state.page}</PageNumber>
           </NavButtons>
         </div>
       )}
