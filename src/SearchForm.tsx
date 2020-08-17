@@ -22,8 +22,12 @@ const InputField = styled.input`
   border-top: none;
   color: white;
   font-family: "Montserrat", sans-serif;
-  :focus {
+  :focus,
+  :hover {
     outline-width: 0;
+  }
+  option {
+    background: red;
   }
 `;
 

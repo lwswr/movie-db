@@ -101,7 +101,7 @@ const initialDetailedState: DetailedMovie = {
 };
 
 const initialState: AppState = {
-  search: "Lord of the Rings",
+  search: "Star Wars",
   result: undefined,
   page: 1,
   selectedMovie: undefined,
