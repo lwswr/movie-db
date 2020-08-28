@@ -20,7 +20,7 @@ const Poster = styled.img`
   transition: 0.5s ease;
   backface-visibility: hidden;
   :hover {
-    opacity: 0.7;
+    opacity: 0.5;
   }
 `;
 

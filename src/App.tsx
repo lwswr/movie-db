@@ -6,6 +6,7 @@ import { MovieList } from "./MovieList";
 import { PopUp } from "./PopUp";
 import { getMovies, getSelected } from "./API";
 import "./index.css";
+import { HighRatedList } from "./HighRatedList";
 // import { PageButtons } from "./PageButtons";
 
 const MainContainer = styled.div`
@@ -69,6 +70,7 @@ export type Movie = {
   imdbID: string;
   Type: string;
   Poster: string;
+  imdbRating: string;
 };
 
 export type DetailedMovie = {
@@ -87,6 +89,7 @@ export type AppState = {
   result: MovieResponse | undefined;
   page: number;
   selectedMovie: DetailedMovie | undefined;
+  highestRated: Movie[] | undefined;
 };
 
 const initialDetailedState: DetailedMovie = {
@@ -105,7 +108,14 @@ const initialState: AppState = {
   result: undefined,
   page: 1,
   selectedMovie: undefined,
+  highestRated: undefined,
 };
+
+function sortArray(arr: Movie[]) {
+  return arr.slice(0).sort((a, b) => {
+    return parseInt(a.imdbRating) - parseInt(b.imdbRating);
+  });
+}
 
 export type AppEvents =
   | {
@@ -123,6 +133,10 @@ export type AppEvents =
   | {
       type: "select movie response set";
       selMovieResPayload: DetailedMovie | undefined;
+    }
+  | {
+      type: "highest rated movies set";
+      hRMPayload: Movie[];
     };
 
 export const reducer: React.Reducer<AppState, AppEvents> = (state, event) => {
@@ -146,6 +160,12 @@ export const reducer: React.Reducer<AppState, AppEvents> = (state, event) => {
       return {
         ...state,
         selectedMovie: event.selMovieResPayload,
+      };
+    }
+    case "highest rated movies set": {
+      return {
+        ...state,
+        highestRated: event.hRMPayload,
       };
     }
   }
@@ -181,6 +201,11 @@ function App() {
 
   if (!state.result) return null;
 
+  update({
+    type: "highest rated movies set",
+    hRMPayload: sortArray(state.result.Search),
+  });
+
   return (
     <MainContainer>
       <Title>Movie Database</Title>
@@ -209,6 +234,7 @@ function App() {
           <ResultsFound>
             {state.result.totalResults} results for "{state.search}"
           </ResultsFound>
+
           <MovieList
             movies={state.result.Search}
             sendSelectedID={(id) => {
@@ -217,6 +243,7 @@ function App() {
             }}
           />
 
+          <HighRatedList highRatedMovies={state.highestRated} />
           <NavButtons>
             {state.page === 1 ? null : (
               <NavButton
