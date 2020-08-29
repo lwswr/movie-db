@@ -89,7 +89,6 @@ export type AppState = {
   result: MovieResponse | undefined;
   page: number;
   selectedMovie: DetailedMovie | undefined;
-  highestRated: Movie[] | undefined;
 };
 
 const initialDetailedState: DetailedMovie = {
@@ -108,14 +107,7 @@ const initialState: AppState = {
   result: undefined,
   page: 1,
   selectedMovie: undefined,
-  highestRated: undefined,
 };
-
-function sortArray(arr: Movie[]) {
-  return arr.slice(0).sort((a, b) => {
-    return parseInt(a.imdbRating) - parseInt(b.imdbRating);
-  });
-}
 
 export type AppEvents =
   | {
@@ -133,10 +125,6 @@ export type AppEvents =
   | {
       type: "select movie response set";
       selMovieResPayload: DetailedMovie | undefined;
-    }
-  | {
-      type: "highest rated movies set";
-      hRMPayload: Movie[];
     };
 
 export const reducer: React.Reducer<AppState, AppEvents> = (state, event) => {
@@ -162,12 +150,6 @@ export const reducer: React.Reducer<AppState, AppEvents> = (state, event) => {
         selectedMovie: event.selMovieResPayload,
       };
     }
-    case "highest rated movies set": {
-      return {
-        ...state,
-        highestRated: event.hRMPayload,
-      };
-    }
   }
 };
 
@@ -180,16 +162,11 @@ function App() {
   useEffect(() => {
     async function callToAPIs() {
       try {
-        const [movieResponse, selMovieResponse] = await Promise.all([
+        const [movieResponse] = await Promise.all([
           getMovies(state.search, state.page, mediaType),
           getSelected(selectedID),
         ]);
         update({ type: "movie response set", movieResPayload: movieResponse });
-        update({
-          type: "select movie response set",
-          selMovieResPayload: selMovieResponse,
-        });
-        console.log(selMovieResponse);
       } catch (error) {
         console.log(error);
       }
@@ -197,16 +174,29 @@ function App() {
     if (state.search !== null) {
       callToAPIs();
     }
-  }, [state.search, state.page, selectedID, mediaType]);
+  }, [state.search, state.page, mediaType]);
 
-  if (!state.result) return null;
+  useEffect(() => {
+    async function fetchData() {
+      const selMovieResponse = await getSelected(selectedID);
 
-  update({
-    type: "highest rated movies set",
-    hRMPayload: sortArray(state.result.Search),
-  });
+      update({
+        type: "select movie response set",
+        selMovieResPayload: selMovieResponse,
+      });
+    }
+    fetchData();
+  }, [update, selectedID]);
 
-  return (
+  const sortedMovies = React.useMemo(() => {
+    return state.result
+      ? state.result.Search.slice(0).sort((a, b) => {
+          return parseInt(a.imdbRating) - parseInt(b.imdbRating);
+        })
+      : [];
+  }, [state.result?.Search]);
+
+  return !state.result ? null : (
     <MainContainer>
       <Title>Movie Database</Title>
       {popUpState ? (
@@ -243,7 +233,7 @@ function App() {
             }}
           />
 
-          <HighRatedList highRatedMovies={state.highestRated} />
+          <HighRatedList highRatedMovies={sortedMovies} />
           <NavButtons>
             {state.page === 1 ? null : (
               <NavButton
