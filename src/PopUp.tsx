@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { DetailedMovie } from "./App";
+import { DetailedMovie } from "./API";
 import "./index.css";
 
 const PopUpContainer = styled.div`
@@ -83,7 +83,7 @@ export const PopUp = ({
   backClick,
 }: {
   selected: DetailedMovie | undefined;
-  backClick: (popUpState: boolean) => void;
+  backClick: () => void;
 }) => {
   if (!selected) return null;
   return (
@@ -98,7 +98,7 @@ export const PopUp = ({
         </PopUpPlot>
         <PopUpPoster src={selected.Poster} alt=""></PopUpPoster>
       </PopUpWindow>
-      <PopUpBackButton onClick={() => backClick(false)}>Back</PopUpBackButton>
+      <PopUpBackButton onClick={() => backClick()}>Back</PopUpBackButton>
     </PopUpContainer>
   );
 };

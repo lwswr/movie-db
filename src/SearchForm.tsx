@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import "./index.css";
+import { MediaType, mediaTypes } from "./state";
 
 const SearchFormCon = styled.form`
   display: flex;
@@ -66,7 +67,7 @@ const SubmitButton = styled.button`
 
 type SearchProps = {
   search: string;
-  mediaType: string;
+  mediaType: MediaType;
 };
 
 export const SearchForm = ({
@@ -75,8 +76,7 @@ export const SearchForm = ({
   submit: (fullSearch: SearchProps) => void;
 }) => {
   const [newSearch, setNewSearch] = useState("");
-  const [newMediaType, setNewMediaType] = useState("movie");
-
+  const [newMediaType, setNewMediaType] = useState<MediaType>("movie");
   return (
     <SearchFormCon
       action="submit"
@@ -94,9 +94,14 @@ export const SearchForm = ({
         value={newSearch}
         onChange={(e) => setNewSearch(e.target.value)}
       />
-      <SelectField onChange={(e) => setNewMediaType(e.target.value)}>
-        <option value="film">Film</option>
-        <option value="series">Series</option>
+      <SelectField
+        onChange={(e) => setNewMediaType(e.target.value as MediaType)}
+      >
+        {mediaTypes.map((mediaType) => (
+          <option key={mediaType} value={mediaType}>
+            {mediaType}
+          </option>
+        ))}
       </SelectField>
       <SubmitButton type="submit">Search</SubmitButton>
     </SearchFormCon>
