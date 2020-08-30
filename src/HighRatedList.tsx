@@ -1,7 +1,6 @@
 import * as React from "react";
-
+import styled from "styled-components";
 import { DetailedMovie } from "./API";
-
 
 const Container = styled.div`
   background: white;
@@ -22,15 +21,13 @@ export const HighRatedList = ({
 }) => {
   if (!highRatedMovies) return null;
   return (
-    <div>
+    <Container>
       {highRatedMovies.map((movie) => {
         return (
-          <li>
+          <Item>
             {movie.Title} {movie.imdbRating}
-          </li>
+          </Item>
         );
-
-
       })}
     </Container>
   );

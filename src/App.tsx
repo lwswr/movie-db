@@ -92,7 +92,6 @@ function App() {
           movies.map((movie) => getDetailedMovie(movie.imdbID))
         );
         update({ type: "movies fetched", movies: detailedMovies });
-        
       } catch (error) {
         console.log(error);
       }
@@ -102,7 +101,6 @@ function App() {
     }
   }, [state.search, state.page, state.mediaType]);
 
-
   const sortedMovies = React.useMemo(() => {
     return state.movies
       ? state.movies.slice(0).sort((a, b) => {
@@ -110,7 +108,6 @@ function App() {
         })
       : [];
   }, [state.movies]);
-
 
   return !state.movies ? null : (
     <MainContainer>
@@ -138,7 +135,6 @@ function App() {
                 },
               })
             }
-
           />
           <ResultsFound>
             {state.movies.length} results for "{state.search}"
@@ -149,11 +145,13 @@ function App() {
             </LeftColumn>
             <RightColumn>
               <MovieList
-                movies={state.result.Search}
-                sendSelectedID={(id) => {
-                  update({ type: "selected id set", selectedIDPayload: id });
-                  updatePopUpState(true);
-                }}
+                movies={state.movies}
+                clicked={(id) =>
+                  void update({
+                    type: "movies list item clicked",
+                    clickedMovieId: id,
+                  })
+                }
               />
             </RightColumn>
           </ListAndTopRated>
