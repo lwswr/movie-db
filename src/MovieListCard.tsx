@@ -3,12 +3,13 @@ import styled from "styled-components";
 import { DetailedMovie } from "./API";
 
 const MovieListTile = styled.li`
+  display: flex;
+  flex-direction: row;
   list-style: none;
   flex: 0 0 18%;
-  height: 325px;
-  width: 225px;
-  margin: 20px 20px;
-  padding: 20px 20px;
+  margin: 10px 10px;
+  padding: 10px 10px;
+  width: 500px;
   background: white;
   border-radius: 8px;
 `;
@@ -24,8 +25,14 @@ const Poster = styled.img`
   }
 `;
 
+const MovieTileInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 const MovieTitle = styled.div`
-  font-size: 12px;
+  font-size: 22px;
+  padding: 10px;
 `;
 
 export const MovieListCard = ({
@@ -38,7 +45,9 @@ export const MovieListCard = ({
   return (
     <MovieListTile onClick={() => onClick(movie.imdbID)}>
       <Poster src={movie.Poster} alt="#" />
-      <MovieTitle>{movie.Title}</MovieTitle>
+      <MovieTileInfo>
+        <MovieTitle>{movie.Title}</MovieTitle>
+      </MovieTileInfo>
     </MovieListTile>
   );
 };

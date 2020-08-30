@@ -11,11 +11,25 @@ import { initialState, reducer } from "./state";
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
   background: rgb(34, 41, 46);
   height: 100%;
   width: 100%;
   margin: 0px;
+`;
+
+const ListAndTopRated = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const LeftColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const RightColumn = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 const Title = styled.div`
@@ -27,8 +41,13 @@ const Title = styled.div`
 
 const ResultsFound = styled.div`
   color: white;
-  text-align: left;
-  padding-left: 100px;
+  text-align: center;
+  padding-top: 20px;
+`;
+
+const PopUpContainer = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const NavButtons = styled.div`
@@ -73,6 +92,7 @@ function App() {
           movies.map((movie) => getDetailedMovie(movie.imdbID))
         );
         update({ type: "movies fetched", movies: detailedMovies });
+        
       } catch (error) {
         console.log(error);
       }
@@ -82,6 +102,7 @@ function App() {
     }
   }, [state.search, state.page, state.mediaType]);
 
+
   const sortedMovies = React.useMemo(() => {
     return state.movies
       ? state.movies.slice(0).sort((a, b) => {
@@ -89,6 +110,7 @@ function App() {
         })
       : [];
   }, [state.movies]);
+
 
   return !state.movies ? null : (
     <MainContainer>
@@ -116,10 +138,25 @@ function App() {
                 },
               })
             }
+
           />
           <ResultsFound>
             {state.movies.length} results for "{state.search}"
           </ResultsFound>
+          <ListAndTopRated>
+            <LeftColumn>
+              <HighRatedList highRatedMovies={sortedMovies} />
+            </LeftColumn>
+            <RightColumn>
+              <MovieList
+                movies={state.result.Search}
+                sendSelectedID={(id) => {
+                  update({ type: "selected id set", selectedIDPayload: id });
+                  updatePopUpState(true);
+                }}
+              />
+            </RightColumn>
+          </ListAndTopRated>
 
           <MovieList
             movies={state.movies}
@@ -132,6 +169,7 @@ function App() {
           />
 
           <HighRatedList highRatedMovies={sortedMovies} />
+
           <NavButtons>
             {state.page === 1 ? null : (
               <NavButton

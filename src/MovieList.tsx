@@ -5,7 +5,7 @@ import { DetailedMovie } from "./API";
 
 const MoviesList = styled.div`
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   justify-content: center;
   background: rgb(34, 41, 46);
 `;
