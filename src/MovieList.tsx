@@ -1,7 +1,7 @@
 import React from "react";
-import { Movie } from "./App";
 import { MovieListCard } from "./MovieListCard";
 import styled from "styled-components";
+import { DetailedMovie } from "./API";
 
 const MoviesList = styled.div`
   display: flex;
@@ -12,10 +12,10 @@ const MoviesList = styled.div`
 
 export const MovieList = ({
   movies,
-  sendSelectedID,
+  clicked,
 }: {
-  movies: Movie[];
-  sendSelectedID: (id: string) => void;
+  movies: DetailedMovie[];
+  clicked: (id: string) => void;
 }) => {
   return (
     <MoviesList>
@@ -24,7 +24,7 @@ export const MovieList = ({
           <MovieListCard
             key={item.imdbID}
             movie={item}
-            onClick={(id: string) => sendSelectedID(id)}
+            onClick={(id) => clicked(id)}
           />
         );
       })}

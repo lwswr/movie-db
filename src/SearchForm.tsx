@@ -95,7 +95,7 @@ export const SearchForm = ({
         onChange={(e) => setNewSearch(e.target.value)}
       />
       <SelectField onChange={(e) => setNewMediaType(e.target.value)}>
-        <option value="film">Film</option>
+        <option value="movie">Movie</option>
         <option value="series">Series</option>
       </SelectField>
       <SubmitButton type="submit">Search</SubmitButton>

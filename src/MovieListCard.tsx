@@ -1,6 +1,6 @@
 import React from "react";
-import { Movie } from "./App";
 import styled from "styled-components";
+import { DetailedMovie } from "./API";
 
 const MovieListTile = styled.li`
   list-style: none;
@@ -32,7 +32,7 @@ export const MovieListCard = ({
   movie,
   onClick,
 }: {
-  movie: Movie;
+  movie: DetailedMovie;
   onClick: (id: string) => void;
 }) => {
   return (

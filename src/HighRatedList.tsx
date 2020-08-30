@@ -1,16 +1,15 @@
 import * as React from "react";
-
-import { Movie } from "./App";
+import { DetailedMovie } from "./API";
 
 export const HighRatedList = ({
   highRatedMovies,
 }: {
-  highRatedMovies: Movie[] | undefined;
+  highRatedMovies: DetailedMovie[] | undefined;
 }) => {
   if (!highRatedMovies) return null;
   return (
     <div>
-      {highRatedMovies.map((movie: Movie) => {
+      {highRatedMovies.map((movie) => {
         return (
           <li>
             {movie.Title} {movie.imdbRating}
