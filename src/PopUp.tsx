@@ -7,6 +7,7 @@ const PopUpContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: auto;
   font-family: "Montserrat", sans-serif;
   background: rgb(34, 41, 46);
   height: 100vh;

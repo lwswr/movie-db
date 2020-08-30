@@ -12,11 +12,25 @@ import { HighRatedList } from "./HighRatedList";
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
   background: rgb(34, 41, 46);
   height: 100%;
   width: 100%;
   margin: 0px;
+`;
+
+const ListAndTopRated = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const LeftColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const RightColumn = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 const Title = styled.div`
@@ -28,8 +42,13 @@ const Title = styled.div`
 
 const ResultsFound = styled.div`
   color: white;
-  text-align: left;
-  padding-left: 100px;
+  text-align: center;
+  padding-top: 20px;
+`;
+
+const PopUpContainer = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const NavButtons = styled.div`
@@ -89,6 +108,8 @@ export type AppState = {
   result: MovieResponse | undefined;
   page: number;
   selectedMovie: DetailedMovie | undefined;
+  selectedID: string;
+  popUp: boolean;
 };
 
 const initialDetailedState: DetailedMovie = {
@@ -107,12 +128,14 @@ const initialState: AppState = {
   result: undefined,
   page: 1,
   selectedMovie: undefined,
+  selectedID: "",
+  popUp: false,
 };
 
 export type AppEvents =
   | {
       type: "search set";
-      payload: { search: string };
+      searchPayload: { search: string };
     }
   | {
       type: "movie response set";
@@ -125,6 +148,14 @@ export type AppEvents =
   | {
       type: "select movie response set";
       selMovieResPayload: DetailedMovie | undefined;
+    }
+  | {
+      type: "selected id set";
+      selectedIDPayload: string;
+    }
+  | {
+      type: "popup changed";
+      popUpPayload: boolean;
     };
 
 export const reducer: React.Reducer<AppState, AppEvents> = (state, event) => {
@@ -132,7 +163,7 @@ export const reducer: React.Reducer<AppState, AppEvents> = (state, event) => {
     case "search set": {
       return {
         ...state,
-        search: event.payload.search,
+        search: event.searchPayload.search,
       };
     }
     case "movie response set": {
@@ -150,21 +181,31 @@ export const reducer: React.Reducer<AppState, AppEvents> = (state, event) => {
         selectedMovie: event.selMovieResPayload,
       };
     }
+    case "selected id set": {
+      return {
+        ...state,
+        selectedID: event.selectedIDPayload,
+      };
+    }
+    case "popup changed": {
+      return {
+        ...state,
+        popUp: event.popUpPayload,
+      };
+    }
   }
 };
 
 function App() {
   const [state, update] = useReducer(reducer, initialState);
-  const [selectedID, updateSelectedID] = React.useState("");
   const [popUpState, updatePopUpState] = React.useState(false);
   const [mediaType, setMediaType] = React.useState("movie");
 
   useEffect(() => {
-    async function callToAPIs() {
+    async function fetchMovies() {
       try {
         const [movieResponse] = await Promise.all([
           getMovies(state.search, state.page, mediaType),
-          getSelected(selectedID),
         ]);
         update({ type: "movie response set", movieResPayload: movieResponse });
       } catch (error) {
@@ -172,21 +213,21 @@ function App() {
       }
     }
     if (state.search !== null) {
-      callToAPIs();
+      fetchMovies();
     }
   }, [state.search, state.page, mediaType]);
 
   useEffect(() => {
-    async function fetchData() {
-      const selMovieResponse = await getSelected(selectedID);
+    async function fetchSelectedMovie() {
+      const selMovieResponse = await getSelected(state.selectedID);
 
       update({
         type: "select movie response set",
         selMovieResPayload: selMovieResponse,
       });
     }
-    fetchData();
-  }, [update, selectedID]);
+    fetchSelectedMovie();
+  }, [update, state.selectedID]);
 
   const sortedMovies = React.useMemo(() => {
     return state.result
@@ -194,28 +235,30 @@ function App() {
           return parseInt(a.imdbRating) - parseInt(b.imdbRating);
         })
       : [];
-  }, [state.result?.Search]);
+  }, [state.result]);
 
   return !state.result ? null : (
     <MainContainer>
       <Title>Movie Database</Title>
       {popUpState ? (
-        <PopUp
-          selected={state.selectedMovie}
-          backClick={(click) => {
-            updatePopUpState(click);
-            update({
-              type: "select movie response set",
-              selMovieResPayload: initialDetailedState,
-            });
-            updateSelectedID("");
-          }}
-        />
+        <PopUpContainer>
+          <PopUp
+            selected={state.selectedMovie}
+            backClick={(click) => {
+              update({ type: "popup changed", popUpPayload: click });
+              update({
+                type: "select movie response set",
+                selMovieResPayload: initialDetailedState,
+              });
+              update({ type: "selected id set", selectedIDPayload: "" });
+            }}
+          />
+        </PopUpContainer>
       ) : (
         <div>
           <SearchForm
             submit={({ search, mediaType }) => {
-              update({ type: "search set", payload: { search } });
+              update({ type: "search set", searchPayload: { search } });
               update({ type: "page number changed", pagePayload: { page: 1 } });
               setMediaType(mediaType);
             }}
@@ -224,16 +267,21 @@ function App() {
           <ResultsFound>
             {state.result.totalResults} results for "{state.search}"
           </ResultsFound>
+          <ListAndTopRated>
+            <LeftColumn>
+              <HighRatedList highRatedMovies={sortedMovies} />
+            </LeftColumn>
+            <RightColumn>
+              <MovieList
+                movies={state.result.Search}
+                sendSelectedID={(id) => {
+                  update({ type: "selected id set", selectedIDPayload: id });
+                  updatePopUpState(true);
+                }}
+              />
+            </RightColumn>
+          </ListAndTopRated>
 
-          <MovieList
-            movies={state.result.Search}
-            sendSelectedID={(id) => {
-              updateSelectedID(id);
-              updatePopUpState(true);
-            }}
-          />
-
-          <HighRatedList highRatedMovies={sortedMovies} />
           <NavButtons>
             {state.page === 1 ? null : (
               <NavButton
