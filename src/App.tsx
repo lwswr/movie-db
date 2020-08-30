@@ -111,7 +111,6 @@ function App() {
               void update({
                 type: "search submitted",
                 payload: {
-                  // @ts-expect-error we will update to return MediaType instead of string later
                   mediaType,
                   search,
                 },

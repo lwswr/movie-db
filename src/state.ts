@@ -2,7 +2,12 @@ import React from "react";
 import { DetailedMovie } from "./API";
 import produce from "immer";
 
-export type MediaType = "movie" | "series";
+// the "as const" is just saying this is an array of these specific strings
+export const mediaTypes = ["movie", "series"] as const;
+// because mediaTypes is an array of 2 (currently but could be updated) specific strings
+// if we get it's type when accessed by a number
+// e.g. mediaTypes[0] we get a string union e.g. "movie" | "series" without having to manually type it
+export type MediaType = typeof mediaTypes[number];
 
 export type State = {
   search: string;
