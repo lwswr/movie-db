@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { SearchForm } from "./SearchForm";
 import { MovieList } from "./MovieList";
 import { PopUp } from "./PopUp";
-import { getMovies, getDetailedMovie, MovieResponse } from "./API";
+import { getMovies, getDetailedMovie } from "./API";
 import { HighRatedList } from "./HighRatedList";
 import { initialState, reducer } from "./state";
 
@@ -43,11 +43,6 @@ const ResultsFound = styled.div`
   color: white;
   text-align: center;
   padding-top: 20px;
-`;
-
-const PopUpContainer = styled.div`
-  display: flex;
-  align-items: center;
 `;
 
 const NavButtons = styled.div`
@@ -104,7 +99,7 @@ function App() {
   const sortedMovies = React.useMemo(() => {
     return state.movies
       ? state.movies.slice(0).sort((a, b) => {
-          return parseInt(a.imdbRating) - parseInt(b.imdbRating);
+          return parseFloat(b.imdbRating) - parseFloat(a.imdbRating);
         })
       : [];
   }, [state.movies]);
