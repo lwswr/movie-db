@@ -151,18 +151,6 @@ function App() {
             </RightColumn>
           </ListAndTopRated>
 
-          <MovieList
-            movies={state.movies}
-            clicked={(id) =>
-              void update({
-                type: "movies list item clicked",
-                clickedMovieId: id,
-              })
-            }
-          />
-
-          <HighRatedList highRatedMovies={sortedMovies} />
-
           <NavButtons>
             {state.page === 1 ? null : (
               <NavButton
