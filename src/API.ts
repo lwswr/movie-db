@@ -17,6 +17,7 @@ export type Movie = {
 export type DetailedMovie = {
   Title: string;
   Plot: string;
+  Year: string;
   Released: string;
   Runtime: string;
   Awards: string;

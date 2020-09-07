@@ -9,15 +9,15 @@ const MovieListTile = styled.li`
   flex: 0 0 18%;
   margin: 10px 10px;
   padding: 10px 10px;
-  width: 500px;
+  width: auto;
   background: white;
   border-radius: 8px;
 `;
 
 const Poster = styled.img`
   opacity: 1;
-  height: 300px;
-  width: 200px;
+  height: 60px;
+  width: 40px;
   transition: 0.5s ease;
   backface-visibility: hidden;
   :hover {
@@ -46,7 +46,9 @@ export const MovieListCard = ({
     <MovieListTile onClick={() => onClick(movie.imdbID)}>
       <Poster src={movie.Poster} alt="#" />
       <MovieTileInfo>
-        <MovieTitle>{movie.Title}</MovieTitle>
+        <MovieTitle>
+          {movie.Title} ({movie.Year})
+        </MovieTitle>
       </MovieTileInfo>
     </MovieListTile>
   );

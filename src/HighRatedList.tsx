@@ -25,7 +25,7 @@ export const HighRatedList = ({
       {highRatedMovies.map((movie) => {
         return (
           <Item>
-            {movie.Title} {movie.imdbRating}
+            {movie.imdbRating} {movie.Title}
           </Item>
         );
       })}
