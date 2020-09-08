@@ -17,18 +17,15 @@ const InputField = styled.input`
   padding: 10px 20px;
   margin: 5px 10px;
   background: none;
-  border-bottom: 2px solid white;
+  border-bottom: 2px solid black;
   border-left: none;
   border-right: none;
   border-top: none;
-  color: white;
+  color: black;
   font-family: "Montserrat", sans-serif;
   :focus,
   :hover {
     outline-width: 0;
-  }
-  option {
-    background: red;
   }
 `;
 
@@ -38,11 +35,11 @@ const SelectField = styled.select`
   padding: 10px 20px;
   margin: 5px 10px;
   background: none;
-  border-bottom: 2px solid white;
+  border-bottom: 2px solid black;
   border-left: none;
   border-right: none;
   border-top: none;
-  color: white;
+  color: black;
   font-family: "Montserrat", sans-serif;
   :focus {
     outline-width: 0;
@@ -54,14 +51,14 @@ const SubmitButton = styled.button`
   font-family: "Montserrat", sans-serif;
   padding: 10px 20px;
   margin: 5px 10px;
-  border: 2px solid white;
+  border: 2px solid black;
   border-radius: 10px;
   background: none;
-  color: white;
+  color: black;
   transition: 0.2s;
   :hover {
-    background: white;
-    color: rgb(66, 76, 84);
+    background: black;
+    color: white;
   }
 `;
 
@@ -76,7 +73,7 @@ export const SearchForm = ({
   submit: (fullSearch: SearchProps) => void;
 }) => {
   const [newSearch, setNewSearch] = useState("");
-  const [newMediaType, setNewMediaType] = useState<MediaType>("movie");
+  const [newMediaType, setNewMediaType] = useState<MediaType>("Movie");
   return (
     <SearchFormCon
       action="submit"

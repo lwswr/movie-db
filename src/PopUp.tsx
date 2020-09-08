@@ -9,7 +9,6 @@ const PopUpContainer = styled.div`
   align-items: center;
   margin: auto;
   font-family: "Montserrat", sans-serif;
-  background: rgb(34, 41, 46);
   height: 100vh;
   width: 70%;
 `;
@@ -22,21 +21,22 @@ const PopUpWindow = styled.div`
   color: rgb(66, 76, 84);
   padding: 20px;
   border-radius: 25px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 `;
 
 const PopUpBackButton = styled.button`
   font-size: 25px;
   font-family: "Montserrat", sans-serif;
   padding: 10px 20px;
-  margin: 5px 10px;
-  border: 2px solid white;
+  margin: 20px 0px;
+  border: 2px solid black;
   border-radius: 10px;
   background: none;
-  color: white;
+  color: black;
   transition: 0.2s;
   :hover {
-    background: white;
-    color: rgb(66, 76, 84);
+    background: black;
+    color: white;
   }
 `;
 
@@ -61,8 +61,9 @@ const PopUpPlot = styled.div`
 
 const PopUpPoster = styled.img`
   padding: 10px;
-  height: 450px;
-  width: 300;
+  height: 300px;
+  width: 200px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 `;
 
 const PopUpAwards = styled.div`

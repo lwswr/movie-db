@@ -7,8 +7,8 @@ const MovieListTile = styled.li`
   flex-direction: row;
   list-style: none;
   flex: 0 0 18%;
-  margin: 10px 10px;
-  padding: 10px 10px;
+  margin: 5px 5px;
+  padding: 5px 5px;
   width: auto;
   background: white;
   border-radius: 8px;

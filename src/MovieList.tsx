@@ -7,7 +7,11 @@ const MoviesList = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: rgb(34, 41, 46);
+  padding: 20px 10px;
+  margin: 20px 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 8px;
+  background: white;
 `;
 
 export const MovieList = ({

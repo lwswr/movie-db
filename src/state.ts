@@ -3,7 +3,7 @@ import { DetailedMovie } from "./API";
 import produce from "immer";
 
 // the "as const" is just saying this is an array of these specific strings
-export const mediaTypes = ["movie", "series"] as const;
+export const mediaTypes = ["Movie", "Series"] as const;
 // because mediaTypes is an array of 2 (currently but could be updated) specific strings
 // if we get it's type when accessed by a number
 // e.g. mediaTypes[0] we get a string union e.g. "movie" | "series" without having to manually type it
@@ -24,7 +24,7 @@ export const initialState = (): State => ({
   page: 1,
   selectedMovie: undefined,
   popupState: false,
-  mediaType: "movie",
+  mediaType: "Movie",
 });
 
 export type Events =

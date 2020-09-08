@@ -10,11 +10,20 @@ import { initialState, reducer } from "./state";
 
 const MainContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  background: rgb(34, 41, 46);
+  flex-direction: row;
+  justify-content: center;
+  background: #f5f5f5;
   height: 100%;
   width: 100%;
   margin: 0px;
+`;
+
+const InternalColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  background: white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  width: 60%;
 `;
 
 const ListAndTopRated = styled.div`
@@ -33,14 +42,14 @@ const RightColumn = styled.div`
 `;
 
 const Title = styled.div`
-  color: white;
+  color: black;
   text-align: center;
   font-size: 50px;
   padding: 20px;
 `;
 
 const ResultsFound = styled.div`
-  color: white;
+  color: black;
   text-align: center;
   padding-top: 20px;
 `;
@@ -56,19 +65,19 @@ const NavButton = styled.button`
   font-family: "Montserrat", sans-serif;
   padding: 10px 20px;
   margin: 5px 10px;
-  border: 2px solid white;
+  border: 2px solid black;
   border-radius: 10px;
   background: none;
-  color: white;
+  color: black;
   transition: 0.2s;
   :hover {
-    background: white;
-    color: rgb(66, 76, 84);
+    background: black;
+    color: white;
   }
 `;
 
 const PageNumber = styled.div`
-  color: white;
+  color: black;
 `;
 
 function App() {
@@ -106,76 +115,82 @@ function App() {
 
   return !state.movies ? null : (
     <MainContainer>
-      <Title>Movie Database</Title>
-      {state.popupState && state.selectedMovie && state.movies.length ? (
-        <PopUp
-          selected={state.movies.find(
-            (movie) => movie.imdbID === state.selectedMovie
-          )}
-          backClick={() =>
+      <InternalColumn>
+        <Title>Movie Database</Title>
+        <SearchForm
+          submit={({ search, mediaType }) =>
             void update({
-              type: "popup back button clicked",
+              type: "search submitted",
+              payload: {
+                mediaType,
+                search,
+              },
             })
           }
         />
-      ) : (
-        <div>
-          <SearchForm
-            submit={({ search, mediaType }) =>
+        {state.popupState && state.selectedMovie && state.movies.length ? (
+          <PopUp
+            selected={state.movies.find(
+              (movie) => movie.imdbID === state.selectedMovie
+            )}
+            backClick={() =>
               void update({
-                type: "search submitted",
-                payload: {
-                  mediaType,
-                  search,
-                },
+                type: "popup back button clicked",
               })
             }
           />
-          <ResultsFound>
-            {state.movies.length} results for "{state.search}"
-          </ResultsFound>
-          <ListAndTopRated>
-            <LeftColumn>
-              <HighRatedList highRatedMovies={sortedMovies} />
-            </LeftColumn>
-            <RightColumn>
-              <MovieList
-                movies={state.movies}
-                clicked={(id) =>
-                  void update({
-                    type: "movies list item clicked",
-                    clickedMovieId: id,
-                  })
-                }
-              />
-            </RightColumn>
-          </ListAndTopRated>
+        ) : (
+          <div>
+            <ResultsFound>
+              {state.movies.length} results for "{state.search}"
+            </ResultsFound>
+            <ListAndTopRated>
+              <LeftColumn>
+                <HighRatedList
+                  search={state.search}
+                  mediaType={state.mediaType}
+                  highRatedMovies={sortedMovies}
+                />
+              </LeftColumn>
+              <RightColumn>
+                <MovieList
+                  movies={state.movies}
+                  clicked={(id) =>
+                    void update({
+                      type: "movies list item clicked",
+                      clickedMovieId: id,
+                    })
+                  }
+                />
+              </RightColumn>
+            </ListAndTopRated>
 
-          <NavButtons>
-            {state.page === 1 ? null : (
+            <NavButtons>
+              {state.page === 1 ? null : (
+                <NavButton
+                  onClick={() =>
+                    void update({
+                      type: "page button minus clicked",
+                    })
+                  }
+                >
+                  Prev
+                </NavButton>
+              )}
               <NavButton
                 onClick={() =>
                   void update({
-                    type: "page button minus clicked",
+                    type: "page button plus clicked",
                   })
                 }
               >
-                Prev
+                Next
               </NavButton>
-            )}
-            <NavButton
-              onClick={() =>
-                void update({
-                  type: "page button plus clicked",
-                })
-              }
-            >
-              Next
-            </NavButton>
-            <PageNumber> page {state.page}</PageNumber>
-          </NavButtons>
-        </div>
-      )}
+              <PageNumber> page {state.page}</PageNumber>
+            </NavButtons>
+          </div>
+        )}
+      </InternalColumn>
     </MainContainer>
   );
 }
