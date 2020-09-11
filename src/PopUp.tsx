@@ -11,6 +11,7 @@ const PopUpContainer = styled.div`
   font-family: "Montserrat", sans-serif;
   height: 100vh;
   width: 70%;
+  padding: 20px;
 `;
 
 const PopUpWindow = styled.div`

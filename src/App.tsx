@@ -34,11 +34,15 @@ const ListAndTopRated = styled.div`
 const LeftColumn = styled.div`
   display: flex;
   flex-direction: column;
+  align-content: stretch;
+  width: 35%;
 `;
 
 const RightColumn = styled.div`
   display: flex;
   flex-direction: column;
+  align-content: stretch;
+  width: 65%;
 `;
 
 const Title = styled.div`
