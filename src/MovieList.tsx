@@ -2,8 +2,9 @@ import React from "react";
 import { MovieListCard } from "./MovieListCard";
 import styled from "styled-components";
 import { DetailedMovie } from "./API";
+import { useSpring, animated as a } from "react-spring";
 
-const MoviesList = styled.div`
+const MoviesList = styled(a.div)`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -22,8 +23,14 @@ export const MovieList = ({
   movies: DetailedMovie[];
   clicked: (id: string) => void;
 }) => {
+  const fade = useSpring({
+    duration: 3000,
+    from: { opacity: 0 },
+    opacity: 1,
+  });
+
   return (
-    <MoviesList>
+    <MoviesList style={fade}>
       {movies.map((item) => {
         return (
           <MovieListCard
